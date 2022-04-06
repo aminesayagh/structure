@@ -3,14 +3,14 @@
 
 #include "list.h"
 
-Liste initialisationList(){
+Liste initialisationList(int premierCNE){
       Liste liste = malloc(sizeof(Liste));
       Etudiant etudiant = malloc(sizeof(etudiant));
 
       if(liste == NULL || etudiant == NULL) exit(EXIT_FAILURE);
       
       etudiant->suivant = NULL;
-      
+      etudiant->CNE = premierCNE;
       liste->premier = etudiant;
 
       return liste;
@@ -30,7 +30,7 @@ void insertion(Liste liste, int cneNouveauEtudiant){
 
 
 void afficherEtudiant(Liste liste){
-      if(liste == NULL) exit(1);
+      if(liste == NULL) exit(EXIT_FAILURE);
 
       Etudiant actuel = malloc(sizeof(Etudiant));
       actuel = liste->premier;
@@ -60,8 +60,6 @@ void suppressionElement(Liste liste, int cneEtudiant) {
 
       Etudiant etudiant = malloc(sizeof(Etudiant));
 
-      if(liste->premier->CNE == cneEtudiant) suppressionPremierElement(liste);
-
       etudiant = liste->premier;
       do{
             if(etudiant->suivant->CNE == cneEtudiant){
@@ -72,5 +70,74 @@ void suppressionElement(Liste liste, int cneEtudiant) {
             }
             etudiant = etudiant->suivant;
       }while(etudiant->suivant != NULL);
+}
+
+Etudiant localisationPremierOccurence(Liste liste, int cneEtudiant){
+      if(liste == NULL) exit(EXIT_FAILURE);
+
+      if(liste->premier == NULL) exit(EXIT_FAILURE);
+
+      Etudiant etudiant = malloc(sizeof(Etudiant));
+
+      etudiant = liste->premier;
+      do{
+            if(etudiant->CNE == cneEtudiant) return etudiant;
+            etudiant = etudiant->suivant;
+      }while(etudiant->suivant != NULL);
+      return NULL;
+}
+
+Etudiant localisationDernierOccurence(Liste liste, int cneEtudiant) {
+      if(liste == NULL) exit(EXIT_FAILURE);
+
+      if(liste->premier == NULL) exit(EXIT_FAILURE);
+
+      Etudiant etudiant = malloc(sizeof(Etudiant));
+
+      Etudiant etudiantDernierOcc = malloc(sizeof(Etudiant));
+      etudiantDernierOcc= NULL;
+
+      etudiant = liste->premier;
+      do{
+            if(etudiant->CNE == cneEtudiant) etudiantDernierOcc = etudiant;
+
+            etudiant = etudiant->suivant; 
+      }while(etudiant->suivant != NULL);
+
+      return etudiantDernierOcc;
+}
+
+Etudiant localisationNiemOccurence(Liste liste, int cneEtudiant, int numOcc){
+      if(liste == NULL) exit(EXIT_FAILURE);
+      if(liste->premier == NULL) exit(EXIT_FAILURE);
+
+      int numEtudiantTrouver = 0;
+      Etudiant etudiant = malloc(sizeof(Etudiant));
+
+      etudiant = liste->premier;
+      do{
+            if(etudiant->CNE == cneEtudiant){
+                  numEtudiantTrouver++;
+                  if(numEtudiantTrouver == numOcc) return etudiant;
+            }
+            etudiant = etudiant->suivant;
+      } while(etudiant->suivant != NULL);
+
+      return NULL;
+}
+
+int longeurListe(Liste liste){
+      if(liste == NULL) exit(EXIT_FAILURE);
+      if(liste->premier == NULL) return 0;
+
+      int tailleDuListe = 0;
+      Etudiant etudiant = malloc(sizeof(Etudiant));
+      etudiant = liste->premier;
+      do{
+            tailleDuListe++;
+            etudiant = etudiant->suivant;
+      }while(etudiant->suivant != NULL);
+
+      return tailleDuListe;
 }
 
